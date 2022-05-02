@@ -3,7 +3,6 @@ const mysql = require('mysql2');
 const { db } = require('../config.json');
 
 var turboDB  = mysql.createPool({
-    poolLimit : 10,
     host            : db.host,
     user            : db.user,
     password        : db.password,

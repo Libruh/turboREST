@@ -39,4 +39,8 @@ app.get('/api/', (req, res) => {
     res.send('This is the ROOT');
 })
 
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ', err);
+});
+
 httpsServer.listen(5039);

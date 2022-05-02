@@ -23,7 +23,6 @@ router.get('/:userID', async (req, res) => {
     }
 
     tracks = await getTracks(trackIDs)
-    tracks = tracks
 
     let index = 0;
     for (const track in tracks) {
@@ -33,6 +32,7 @@ router.get('/:userID', async (req, res) => {
         }
     }
 
+    tracks = tracks.reverse()
     user.tracks = tracks
     user.trackCount = tracks.length
 

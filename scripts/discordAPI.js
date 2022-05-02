@@ -46,8 +46,25 @@ async function getUsers(contributorIds) {
     for (const contributorId of contributorIds) {
         user = ""
 
-        let globalProfile = await client.users.fetch(contributorId)
-        let guildProfile = await guildData.members.cache.get(contributorId)
+        let globalProfile = {}
+        let guildProfile = {}
+        let failCount = 0
+
+        while(failCount < 5){
+            try {
+                globalProfile = await client.users.fetch(contributorId)
+                guildProfile = await guildData.members.cache.get(contributorId)
+                break
+            } catch (error) {
+                failCount += 1
+                console.log("ERROR: "+error);
+                console.log("failCount: "+failCount+", Trying again...\n");
+                await sleep(1000)
+            }
+        }
+        if(failCount >= 5){
+            return undefined
+        }
 
         let sContributor = {}
 
