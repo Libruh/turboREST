@@ -77,7 +77,10 @@ router.get('/:date', async (req, res) => {
                 console.log(tracks[index]);
             }
             const contributorID = databaseObj[index].addedBy
-            tracks[index].contributor = contributors[contributorID]
+
+            if(contributorID !== null){
+                tracks[index].contributor = contributors[contributorID]
+            }
             tracks[index].votes = databaseObj[index].votes
         }
     }

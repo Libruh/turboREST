@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const fs = require('fs-extra')
-const { turboDB } = require('../database/database.js')
-const { promiseQuery, promiseRead } = require('../scripts/promises')
+const moment = require('moment');
+const { promiseQuery } = require('../scripts/promises')
 const { getTracks } = require('../scripts/spotifyAPI')
 const { getUsers } = require('../scripts/discordAPI')
 
@@ -28,6 +27,10 @@ router.get('/:userID', async (req, res) => {
     for (const track in tracks) {
         if (Object.hasOwnProperty.call(tracks, track)) {
             tracks[track].votes = databaseObj[index].votes
+            let playlistDate = databaseObj[index].playlistDate.toLocaleDateString()
+            playlistDate = moment(playlistDate).format('YYYY-MM-DD')
+
+            tracks[track].playlistDate = playlistDate
             index = index+1;
         }
     }

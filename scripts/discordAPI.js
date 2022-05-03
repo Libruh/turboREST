@@ -50,6 +50,10 @@ async function getUsers(contributorIds) {
         let guildProfile = {}
         let failCount = 0
 
+        if (contributorId === null){
+            return undefined
+        }
+
         while(failCount < 5){
             try {
                 globalProfile = await client.users.fetch(contributorId)
