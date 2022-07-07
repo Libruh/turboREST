@@ -5,6 +5,13 @@ const { promiseQuery } = require('../scripts/promises')
 const { getTracks } = require('../scripts/spotifyAPI')
 const { getUsers } = require('../scripts/discordAPI')
 
+router.get('/discord/:userID', async (req, res) => {
+    const userIds = req.params.userID.split("&")
+    let discordData = await getUsers(userIds)
+
+    res.send(discordData)
+})
+
 router.get('/:userID', async (req, res) => {
     const userID = req.params.userID
     let trackIDs = []

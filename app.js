@@ -24,15 +24,14 @@ var httpsServer = https.createServer(credentials, app);
 
 //Routes
 const playlists = require('./routes/playlists')
-const tracks = require('./routes/tracks')
 const users = require('./routes/users')
 const events = require('./routes/events')
-const leaderboards = require('./routes/leaderboards')
+const leaderboard = require('./routes/leaderboard')
 app.use('/api/playlists/', playlists)
-app.use('/api/tracks/', tracks)
+app.use('/api/playlist/', playlists)
 app.use('/api/users/', users)
 app.use('/api/events/', events)
-app.use('/api/leaderboards/', leaderboards)
+app.use('/api/leaderboard/', leaderboard)
 
 // Basic route
 app.get('/api/', (req, res) => {

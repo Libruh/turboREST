@@ -36,60 +36,58 @@ async function readyBuffer() {
     return promise
 }
 
-async function getUsers(contributorIds) {
+async function getUsers(userIds) {
     await readyBuffer()
 
-    let users = {}
-
-    let guildData = await client.guilds.cache.get(discord.mainServerId)
-
-    for (const contributorId of contributorIds) {
-        user = ""
-
-        let globalProfile = {}
-        let guildProfile = {}
-        let failCount = 0
-
-        if (contributorId === null){
-            return undefined
-        }
-
-        while(failCount < 5){
-            try {
-                globalProfile = await client.users.fetch(contributorId)
-                guildProfile = await guildData.members.cache.get(contributorId)
-                break
-            } catch (error) {
-                failCount += 1
-                console.log("ERROR: "+error);
-                console.log("failCount: "+failCount+", Trying again...\n");
-                await sleep(1000)
-            }
-        }
-        if(failCount >= 5){
-            return undefined
-        }
-
-        let sContributor = {}
-
+    const guild = await client.guilds.fetch(discord.mainServerId)
+    const guildMembers = await guild.members.fetch({user: userIds})
+    let userData = {}
+    
+    for (const index in userIds) {
+        const userId = userIds[index];
+        let userObj = null
         try {
+            userObj = await client.users.fetch(userId)
+        } catch (error) {
+            // Likely means user was deleted or ID is malformed
+            if(error.httpStatus !== 404){
+              throw error
+            }
+            continue
+        }
+
+        if (guildMembers.get(userId)){
+            guildMember = guildMembers.get(userId)
+
+            userData[userId] = {
+                nick: guildMember.nickname ? guildMember.nickname : userObj.username,
+                color: guildMember.roles.highest.color.toString(16),
+                user: userObj
+            }
+
+            // There is an order of precedence to this list, most important ---> least important
+            awardRoles = ["916260182714105856", "916255128774922280", "916254838717825055"]
+
+            for (const index in awardRoles) {
+                if (guildMember._roles.includes(awardRoles[index])) {
+                    awardRole = guildMember.roles.cache.get(awardRoles[index])
+                    userData[userId].award = {
+                        name: awardRole.name,
+                        icon: `https://cdn.discordapp.com/role-icons/${awardRole.id}/${awardRole.icon}.png`
+                    }
+                }
+            }
+
+        } else {
+            userData[userId] = {
+                nick: userObj.username,
+                user: userObj
+            }
             
-            if (typeof guildProfile !== "undefined" && guildProfile.nickname !== null) {
-                sContributor.nick = guildProfile.nickname
-            }
-            else {
-                sContributor.nick = globalProfile.username
-            }
-            sContributor.user = globalProfile
+        }
 
-            users[contributorId] = sContributor
-        }
-        catch (err) {
-            console.log(err);
-        }
     }
-
-    return users
+    return userData
 }
 
 client.login(discord.token);

@@ -24,22 +24,8 @@ const getToken = async () => {
     return data.access_token;
 }
 
-const getTrack = async (token, trackID) => {
-
-    const result = await axios({
-        method: 'get',
-        url: 'https://api.spotify.com/v1/tracks/'+trackID,
-        headers: { 'Authorization' : 'Bearer ' + token}
-    }).catch( err => {
-        console.log("error");
-    })
-    
-    const data = await result.data;
-    return data;
-}
-
 const getTracks = async trackIDs => {
-    let tracks = [];
+    let tracks = {};
     let token = await getToken();
 
     queryLength = Math.ceil(trackIDs.length/50)
@@ -80,7 +66,7 @@ const getTracks = async trackIDs => {
         for (const index in data) {
             for (let i = 0; i < data[index].length; i++) {
                 const track = data[index][i];
-                tracks.push(track)
+                tracks[track.id] = track
             }
         }
     }
