@@ -109,12 +109,12 @@ async function getThumbnails(date){
             finalTiny.write(`${path}/tiny/${date}.png`, () => console.log(`Created tiny thumbnail for ${date}`));
         } else {
             finalBig.write(`${path}/incomplete/${date}.png`, () => console.log(`Created incomplete thumbnail for ${date}`)); 
-            return `https://turboaf.net:5039/api/playlist/thumbnail/incomplete/${date}`
+            return `https://turboaf.net/api/playlist/thumbnail/incomplete/${date}`
         }
     }
     let thumbnails = {
-        'big': `https://turboaf.net:5039/api/playlist/thumbnail/${date}`,
-        'tiny': `https://turboaf.net:5039/api/playlist/thumbnail/tiny/${date}`
+        'big': `https://turboaf.net/api/playlist/thumbnail/${date}`,
+        'tiny': `https://turboaf.net/api/playlist/thumbnail/tiny/${date}`
     }
     return thumbnails
 }
