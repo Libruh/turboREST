@@ -90,4 +90,39 @@ const getPlaylist = async playlistID => {
     return data
 }
 
-module.exports = { getTracks, getPlaylist }
+let hitAttempts = 0;
+
+const getRelatedArtists = async artistId => {
+
+    let token = await getToken();
+
+    const result = await axios({
+        method: 'get',
+        url: `https://api.spotify.com/v1/artists/${artistId}/related-artists`,
+        headers: { 'Authorization' : 'Bearer ' + token}
+    }).catch( err => {
+        console.log(`error on hit hit #${hitAttempts}: ${artistId}`);
+        console.log("error", err);
+    })
+    
+    hitAttempts+=1;
+    console.log(`hit #${hitAttempts}: ${artistId}`);
+    return result.data
+}
+
+const getArtist = async artistId => {
+
+    let token = await getToken();
+
+    const result = await axios({
+        method: 'get',
+        url: `	https://api.spotify.com/v1/artists/${artistId}`,
+        headers: { 'Authorization' : 'Bearer ' + token}
+    }).catch( err => {
+        console.log("error");
+    })
+    
+    return result.data
+}
+
+module.exports = { getTracks, getPlaylist, getRelatedArtists, getArtist }
