@@ -125,4 +125,19 @@ const getArtist = async artistId => {
     return result.data
 }
 
-module.exports = { getTracks, getPlaylist, getRelatedArtists, getArtist }
+const getArtists = async artistIds => {
+
+    let token = await getToken();
+
+    const result = await axios({
+        method: 'get',
+        url: `https://api.spotify.com/v1/artists?ids=${encodeURIComponent(artistIds)}`,
+        headers: { 'Authorization' : 'Bearer ' + token}
+    }).catch( err => {
+        console.log(err.response.data);
+    })
+
+    return result.data
+}
+
+module.exports = { getTracks, getPlaylist, getRelatedArtists, getArtist, getArtists }
